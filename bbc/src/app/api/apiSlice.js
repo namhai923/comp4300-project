@@ -38,5 +38,5 @@ export const apiSlice = createApi({
     reducerPath: 'bbcApi',
     baseQuery: baseQueryWithAuth,
     tagTypes: ['User', 'Contact', 'Messenger', 'Notification', 'Pokegene'],
-    endpoints: (builder) => ({})
+    endpoints: () => ({})
 });

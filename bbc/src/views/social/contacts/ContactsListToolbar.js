@@ -37,12 +37,7 @@ const ContactsListToolbar = (props) => {
                         {selected.length} selected
                     </Typography>
                     <Grid>
-                        <UtilityBar
-                            multipleValues={selected}
-                            favorRequest
-                            repayRequest
-                            handleRemoveContacts={handleRemoveContacts}
-                        ></UtilityBar>
+                        <UtilityBar multipleValues={selected} handleRemoveContacts={handleRemoveContacts}></UtilityBar>
                     </Grid>
                 </>
             ) : (
@@ -56,8 +51,6 @@ ContactsListToolbar.propTypes = {
     selected: PropTypes.arrayOf(PropTypes.string),
     filterName: PropTypes.string,
     onFilterName: PropTypes.func,
-    handleFavorRequest: PropTypes.func,
-    handleRepayRequest: PropTypes.func,
     handleRemoveContacts: PropTypes.func
 };
 

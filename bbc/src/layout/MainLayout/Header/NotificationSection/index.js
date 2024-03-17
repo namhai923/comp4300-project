@@ -183,10 +183,11 @@ const NotificationSection = () => {
                                                     <Grid item xs={12}>
                                                         <Grid container sx={{ px: 2 }}>
                                                             <Stack direction="row" spacing={1}>
-                                                                {status.map((option) => {
+                                                                {status.map((option, idx) => {
                                                                     let selected = option.value === notification;
                                                                     return (
                                                                         <ListItemButton
+                                                                            key={idx}
                                                                             sx={{
                                                                                 borderRadius: `${customization.borderRadius}px`,
                                                                                 pt: 1,

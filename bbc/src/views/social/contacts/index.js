@@ -297,8 +297,6 @@ const Contacts = () => {
                                                                                 singleValue={userName}
                                                                                 multipleValues={[userName]}
                                                                                 sendMessage
-                                                                                favorRequest
-                                                                                repayRequest
                                                                                 handleRemoveContacts={handleRemoveContacts}
                                                                             ></UtilityBar>
                                                                         )}

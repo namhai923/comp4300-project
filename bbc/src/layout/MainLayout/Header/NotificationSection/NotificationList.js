@@ -27,12 +27,6 @@ import { openMenu } from 'app/features/customize/customizeSlice';
 import longTextDisplay from 'utils/longTextDisplay';
 
 let notificationType = {
-    'favor:request': { message: 'Send you a favor request', url: '/credit/debt', menuId: 'debt' },
-    'repay:request': { message: 'Send you a repay request', url: '/repay', menuId: 'repay' },
-    'favor:accept': { message: 'Accept your favor request', url: '/credit/favor', menuId: 'favor' },
-    'repay:accept': { message: 'Accept your repay request', url: '/repay', menuId: 'repay' },
-    'favor:decline': { message: 'Decline your favor request', url: '/credit/favor', menuId: 'favor' },
-    'repay:decline': { message: 'Decline your repay request', url: '/repay', menuId: 'repay' },
     'pokemon:send': { message: 'Send you a pokemon', url: 'pokegene', menuId: 'pokegene' },
     'contact:add': { message: 'Add your account to their contact', url: '' }
 };
