@@ -10,7 +10,7 @@ const social = {
             title: 'Contacts',
             type: 'item',
             icon: IconUsers,
-            url: '/contacts'
+            url: '/'
         },
         {
             id: 'messenger',
