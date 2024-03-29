@@ -1,12 +1,13 @@
 import { useSelector, useDispatch } from 'react-redux';
 
 import { useTheme } from '@mui/material/styles';
-import { Box, ButtonBase, Stack, Typography, Grid, Paper, useMediaQuery } from '@mui/material';
+import { Box, ButtonBase, Stack, Typography, Grid, Paper, Switch, FormControlLabel, useMediaQuery } from '@mui/material';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 
 import Loader from 'components/loader/Loader';
-import Conversation from './Conversation';
-import ChatDrawer from './ChatDrawer';
+import Conversation from 'components/conversation/Conversation';
+import ChatDrawer from 'components/chat/ChatDrawer';
+
 import { gridSpacing } from 'assets/data/constant';
 import SubCard from 'components/cards/SubCard';
 import noConversation from 'assets/images/bison.png';
@@ -15,11 +16,15 @@ import config from 'assets/data/config';
 import { AvatarStyle } from 'components/styled-input';
 import { setChat } from 'app/features/customize/customizeSlice';
 
+import { setValue } from 'app/features/value/valueSlice';
+
 const Messeger = () => {
     const theme = useTheme();
     let dispatch = useDispatch();
     const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
     const matchDownLg = useMediaQuery(theme.breakpoints.down('lg'));
+
+    let peerMode = useSelector((state) => state.value.peerMode);
 
     let currentConversation = useSelector((state) => state.value.currentConversation);
     let chatOpened = useSelector((state) => state.customization.chatOpened);
@@ -28,6 +33,22 @@ const Messeger = () => {
         let action = setChat(!chatOpened);
         dispatch(action);
     };
+
+    const handlePeerModeToggle = (event) => {
+        dispatch(setValue({ type: 'peerMode', value: event.target.checked }));
+    };
+
+    // useEffect(() => {
+    //     async function peerData() {
+    //         if (peerMode) {
+    //             const alias = await user.get('alias');
+    //             const userData = db.get(alias);
+    //             console.log(userData);
+    //         }
+    //     }
+
+    //     peerData();
+    // }, [peerMode]);
 
     let {
         data: contacts,
@@ -62,8 +83,17 @@ const Messeger = () => {
         content = (
             <Grid container spacing={gridSpacing}>
                 <Grid item xs={12}>
-                    <Paper sx={{ p: 2 }}>
-                        <Typography variant="h3">Messenger</Typography>
+                    <Paper>
+                        <Grid container alignItems="center" justifyContent="space-between" sx={{ p: 2 }}>
+                            <Grid item>
+                                <Typography align="center" variant="h3">
+                                    Messenger
+                                </Typography>
+                            </Grid>
+                            <Grid item>
+                                <FormControlLabel control={<Switch checked={peerMode} onChange={handlePeerModeToggle} />} label="P2P" />
+                            </Grid>
+                        </Grid>
                     </Paper>
                 </Grid>
                 <Grid item xs={12}>

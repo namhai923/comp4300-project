@@ -4,7 +4,8 @@ let initialState = {
     pokemonTypes: [],
     pokemon: null,
     currentConversation: null,
-    notification: 'all'
+    notification: 'all',
+    peerMode: false
 };
 
 export let valueSlice = createSlice({

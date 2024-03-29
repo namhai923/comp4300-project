@@ -15,6 +15,7 @@ export let authSlice = createSlice({
         },
         setLogout: (state) => {
             state.token = null;
+            state.userName = '';
             return state;
         }
     }

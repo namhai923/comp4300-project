@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 import { useTheme } from '@mui/material/styles';
 import { Stack, Box, Divider, useMediaQuery } from '@mui/material';
@@ -12,9 +13,17 @@ import { TextMsg } from './ConversationElement';
 import { useGetConversationQuery } from 'app/features/messenger/messengerApiSlice';
 import config from 'assets/data/config';
 
+import { gun } from 'app/gunUtil';
+import store from 'app/store';
+import jwtDecode from 'jwt-decode';
+
 const Conversation = (props) => {
     let { currentConversation, currentName, currentActive, handleChatToggle, chatOpened } = props;
     let theme = useTheme();
+    let peerMode = useSelector((state) => state.value.peerMode);
+    let [peerMessages, setPeerMessages] = useState([]);
+
+    const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
 
     let { data, isLoading, isSuccess, isError, error } = useGetConversationQuery(currentConversation, {
         pollingInterval: config.pollingInterval,
@@ -22,18 +31,33 @@ const Conversation = (props) => {
         refetchOnMountOrArgChange: true,
         skip: !currentConversation
     });
-    const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
 
     const [scrollEl, setScrollEl] = useState();
 
     useEffect(() => {
+        if (peerMode) {
+            let { token } = store.getState().auth;
+            let { userName } = jwtDecode(token);
+            let messages = [];
+            gun.get('users')
+                .get(userName)
+                .get(currentConversation)
+                .map()
+                .once(function (message, id) {
+                    messages = [...messages.slice(-100), { ...message, _id: id }].sort((a, b) => a.createdAt - b.createdAt);
+                    setPeerMessages(messages);
+                    console.log(messages);
+                });
+        }
+
         if (scrollEl) {
             // Set the scroll position to the bottom
             scrollEl.scrollTop = scrollEl.scrollHeight;
         }
-    }, [scrollEl, currentConversation, data]);
+    }, [scrollEl, currentConversation, data, peerMode]);
 
     let content;
+
     if (isLoading) content = <Loader />;
 
     if (isError) {
@@ -56,8 +80,8 @@ const Conversation = (props) => {
                 <PerfectScrollbar containerRef={setScrollEl}>
                     <Box p={matchDownMd ? 1 : 3}>
                         <Stack spacing={matchDownMd ? 1 : 3}>
-                            {data.map((messageProps) => (
-                                <TextMsg messageProps={messageProps} />
+                            {(peerMode ? peerMessages : data).map((messageProps, idx) => (
+                                <TextMsg key={idx} messageProps={messageProps} />
                             ))}
                         </Stack>
                     </Box>

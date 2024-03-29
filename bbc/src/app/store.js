@@ -11,10 +11,10 @@ const store = configureStore({
         [apiSlice.reducerPath]: apiSlice.reducer,
         auth: authReducer,
         customization: customizationReducer,
-        value: valueReducer,
+        value: valueReducer
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }).concat(apiSlice.middleware),
-    devTools: false
+    devTools: true
 });
 
 setupListeners(store.dispatch);

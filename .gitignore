@@ -18,6 +18,9 @@
 #environment
 **/.env
 
+#gun distributed data
+**/radata
+
 # misc
 **/.DS_Store
 **/.env.local

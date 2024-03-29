@@ -12,6 +12,8 @@ import Logo from 'components/logo/Logo';
 import RegisterForm from './form/RegisterForm';
 import { useRegisterMutation } from 'app/features/auth/authApiSlice';
 
+import { addUser } from 'app/gunUtil';
+
 const Register = () => {
     const theme = useTheme();
     let navigate = useNavigate();
@@ -31,6 +33,7 @@ const Register = () => {
                 success: {
                     render() {
                         navigate('/login');
+                        addUser(values.email);
                         return 'Account created successfully 🎉🎉🎉';
                     }
                 },

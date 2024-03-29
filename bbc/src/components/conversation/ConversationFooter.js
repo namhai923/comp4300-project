@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { ButtonBase, IconButton, Stack, Popover } from '@mui/material';
@@ -10,12 +11,18 @@ import { IconMoodSmile, IconBrandTelegram } from '@tabler/icons-react';
 import { AvatarStyle, OutlineInputStyle } from 'components/styled-input';
 import { useSendMessageMutation } from 'app/features/messenger/messengerApiSlice';
 
+import { peerSendMessage } from 'app/gunUtil';
+import store from 'app/store';
+import jwtDecode from 'jwt-decode';
+
 const ConversationFooter = (props) => {
     let { currentConversation } = props;
     const theme = useTheme();
     const [anchorEl, setAnchorEl] = useState(null);
     const [value, setValue] = useState('');
     const inputRef = useRef(null);
+
+    const peerMode = useSelector((state) => state.value.peerMode);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -39,7 +46,13 @@ const ConversationFooter = (props) => {
     let [sendMessage] = useSendMessageMutation();
     let handleSendMessage = async () => {
         try {
-            await sendMessage({ userName: currentConversation, message: value });
+            if (peerMode) {
+                let { token } = store.getState().auth;
+                let { userName } = jwtDecode(token);
+                peerSendMessage(userName, currentConversation, value);
+            } else {
+                await sendMessage({ userName: currentConversation, message: value });
+            }
             setValue('');
         } catch (err) {
             console.log(err);
@@ -81,10 +94,9 @@ const ConversationFooter = (props) => {
                 multiline
                 placeholder="Write a message..."
                 onKeyDown={(event) => {
-                    if (event.code === 'Enter') {
+                    if (event.key === 'Enter') {
                         event.preventDefault();
                         handleSendMessage(value);
-                        setValue('');
                     }
                 }}
                 endAdornment={
