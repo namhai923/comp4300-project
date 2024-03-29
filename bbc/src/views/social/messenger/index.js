@@ -38,18 +38,6 @@ const Messeger = () => {
         dispatch(setValue({ type: 'peerMode', value: event.target.checked }));
     };
 
-    // useEffect(() => {
-    //     async function peerData() {
-    //         if (peerMode) {
-    //             const alias = await user.get('alias');
-    //             const userData = db.get(alias);
-    //             console.log(userData);
-    //         }
-    //     }
-
-    //     peerData();
-    // }, [peerMode]);
-
     let {
         data: contacts,
         isLoading: isContactsLoading,

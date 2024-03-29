@@ -6,7 +6,7 @@ import { ButtonBase, IconButton, Stack, Popover } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
-import { IconMoodSmile, IconBrandTelegram } from '@tabler/icons-react';
+import { IconMoodSmile, IconBrandTelegram, IconAlarm } from '@tabler/icons-react';
 
 import { AvatarStyle, OutlineInputStyle } from 'components/styled-input';
 import { useSendMessageMutation } from 'app/features/messenger/messengerApiSlice';
@@ -14,6 +14,7 @@ import { useSendMessageMutation } from 'app/features/messenger/messengerApiSlice
 import { peerSendMessage } from 'app/gunUtil';
 import store from 'app/store';
 import jwtDecode from 'jwt-decode';
+// import { performance } from 'perf_hooks';
 
 const ConversationFooter = (props) => {
     let { currentConversation } = props;
@@ -54,6 +55,29 @@ const ConversationFooter = (props) => {
                 await sendMessage({ userName: currentConversation, message: value });
             }
             setValue('');
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    let runTest = async () => {
+        try {
+            const before = performance.now();
+            if (peerMode) {
+                let { token } = store.getState().auth;
+                let { userName } = jwtDecode(token);
+                for (let i = 0; i < 100; i++) {
+                    peerSendMessage(userName, currentConversation, i.toString());
+                }
+                const after = performance.now();
+                peerSendMessage(userName, currentConversation, `${after - before} milliseconds`);
+            } else {
+                for (let i = 0; i < 100; i++) {
+                    await sendMessage({ userName: currentConversation, message: i.toString() });
+                }
+                const after = performance.now();
+                await sendMessage({ userName: currentConversation, message: `${after - before} milliseconds` });
+            }
         } catch (err) {
             console.log(err);
         }
@@ -100,11 +124,18 @@ const ConversationFooter = (props) => {
                     }
                 }}
                 endAdornment={
-                    <ButtonBase sx={{ borderRadius: '12px', marginRight: '10px' }} onClick={handleSendMessage}>
-                        <AvatarStyle color={theme.palette.primary} variant="rounded">
-                            <IconBrandTelegram stroke={1.5} size="1.3rem" />
-                        </AvatarStyle>
-                    </ButtonBase>
+                    <>
+                        <ButtonBase sx={{ borderRadius: '12px', marginRight: '10px' }} onClick={handleSendMessage}>
+                            <AvatarStyle color={theme.palette.primary} variant="rounded">
+                                <IconBrandTelegram stroke={1.5} size="1.3rem" />
+                            </AvatarStyle>
+                        </ButtonBase>
+                        <ButtonBase sx={{ borderRadius: '12px', marginRight: '10px' }} onClick={runTest}>
+                            <AvatarStyle color={theme.palette.error} variant="rounded">
+                                <IconAlarm stroke={1.5} size="1.3rem" />
+                            </AvatarStyle>
+                        </ButtonBase>
+                    </>
                 }
             />
         </Stack>
