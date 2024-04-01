@@ -50,6 +50,7 @@ const ConversationFooter = (props) => {
             if (peerMode) {
                 let { token } = store.getState().auth;
                 let { userName } = jwtDecode(token);
+                console.log(Date.now());
                 peerSendMessage(userName, currentConversation, value);
             } else {
                 await sendMessage({ userName: currentConversation, message: value });

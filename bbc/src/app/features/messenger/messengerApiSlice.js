@@ -73,6 +73,7 @@ export const messengerApiSlice = apiSlice.injectEndpoints({
                             if (currentConversation) {
                                 if (currentConversation === messageInfo.sender) {
                                     draft.push(messageInfo.latestMessage);
+                                    console.log(Date.now());
                                 }
                             }
                         });
@@ -94,6 +95,7 @@ export const messengerApiSlice = apiSlice.injectEndpoints({
             }),
             async onQueryStarted(arg, { getState, queryFulfilled }) {
                 try {
+                    console.log(Date.now());
                     let result = await queryFulfilled;
                     const socket = getSocket(getState().auth.token);
                     socket.emit('message:send', arg.userName, result.data);

@@ -46,6 +46,7 @@ const Conversation = (props) => {
                 .once(function (message, id) {
                     messages = [...messages.slice(-100), { ...message, _id: id }].sort((a, b) => a.createdAt - b.createdAt);
                     setPeerMessages(messages);
+                    console.log(Date.now());
                 });
         }
 
