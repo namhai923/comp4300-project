@@ -68,10 +68,10 @@ const ConversationFooter = (props) => {
                 let { token } = store.getState().auth;
                 let { userName } = jwtDecode(token);
                 for (let i = 0; i < 100; i++) {
-                    peerSendMessage(userName, currentConversation, i.toString());
+                    await peerSendMessage(userName, currentConversation, i.toString());
                 }
                 const after = performance.now();
-                peerSendMessage(userName, currentConversation, `${after - before} milliseconds`);
+                await peerSendMessage(userName, currentConversation, `${after - before} milliseconds`);
             } else {
                 for (let i = 0; i < 100; i++) {
                     await sendMessage({ userName: currentConversation, message: i.toString() });
