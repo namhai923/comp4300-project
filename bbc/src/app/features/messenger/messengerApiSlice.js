@@ -73,9 +73,8 @@ export const messengerApiSlice = apiSlice.injectEndpoints({
                             if (currentConversation) {
                                 if (currentConversation === messageInfo.sender) {
                                     draft.push(messageInfo.latestMessage);
-                                    console.log('Receiver - message: ' + messageInfo.latestMessage);
                                     console.log(Date.now());
-                                } 
+                                }
                             }
                         });
                     });
