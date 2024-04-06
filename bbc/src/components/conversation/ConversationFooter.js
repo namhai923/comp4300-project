@@ -50,7 +50,7 @@ const ConversationFooter = (props) => {
             if (peerMode) {
                 let { token } = store.getState().auth;
                 let { userName } = jwtDecode(token);
-                console.log(Date.now());
+                console.log(Date.now() + " " + value);
                 peerSendMessage(userName, currentConversation, value);
             } else {
                 await sendMessage({ userName: currentConversation, message: value });
@@ -75,6 +75,33 @@ const ConversationFooter = (props) => {
             } else {
                 for (let i = 0; i < 100; i++) {
                     await sendMessage({ userName: currentConversation, message: i.toString() });
+                }
+                const after = performance.now();
+                await sendMessage({ userName: currentConversation, message: `${after - before} milliseconds` });
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    let runTestTwo = async () => {
+        try {
+            const startTime = Date.now();
+            const endTime = startTime + 30000;
+            const before = performance.now();
+            if (peerMode) {
+                let { token } = store.getState().auth;
+                let { userName } = jwtDecode(token);
+                while (Date.now() < endTime) {
+                    await new Promise((resolve) => setTimeout(resolve, 1));
+                    await peerSendMessage(userName, currentConversation, 'Hello :D');
+                }
+                const after = performance.now();
+                await peerSendMessage(userName, currentConversation, `${after - before} milliseconds`);
+            } else {
+                while (Date.now() < endTime) {
+                    await new Promise((resolve) => setTimeout(resolve, 1));
+                    await sendMessage({ userName: currentConversation, message: 'Hello D:' });
                 }
                 const after = performance.now();
                 await sendMessage({ userName: currentConversation, message: `${after - before} milliseconds` });
@@ -134,6 +161,11 @@ const ConversationFooter = (props) => {
                         <ButtonBase sx={{ borderRadius: '12px', marginRight: '10px' }} onClick={runTest}>
                             <AvatarStyle color={theme.palette.error} variant="rounded">
                                 <IconAlarm stroke={1.5} size="1.3rem" />
+                            </AvatarStyle>
+                        </ButtonBase>
+                        <ButtonBase sx={{ borderRadius: '12px', marginRight: '10px' }} onClick={runTestTwo}>
+                            <AvatarStyle color={theme.palette.error} variant="rounded">
+                                <IconMoodSmile stroke={1.5} size="1.3rem" />
                             </AvatarStyle>
                         </ButtonBase>
                     </>
